@@ -237,13 +237,89 @@ document.querySelectorAll('.skill-tag').forEach(tag => {
     });
 });
 
-// Parallax effect for hero section (subtle)
+// Parallax effect for hero content (subtle, contained)
 window.addEventListener('scroll', () => {
     const scrolled = window.pageYOffset;
+    const heroContent = document.querySelector('.hero-content');
     const hero = document.querySelector('.hero');
-    if (hero) {
-        hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+    if (heroContent && hero) {
+        // Only apply parallax within the hero section bounds
+        const heroHeight = hero.offsetHeight;
+        if (scrolled < heroHeight) {
+            heroContent.style.transform = `translateY(${scrolled * 0.3}px)`;
+            heroContent.style.opacity = Math.max(1 - scrolled / heroHeight, 0);
+        }
     }
+});
+
+// Lightbox functionality
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightbox-img');
+const lightboxClose = document.getElementById('lightbox-close');
+
+// Open lightbox when clicking gallery items
+document.querySelectorAll('.gallery-item, .sketch-item').forEach(item => {
+    item.addEventListener('click', () => {
+        const img = item.querySelector('img');
+        if (img && lightbox && lightboxImg) {
+            lightboxImg.src = img.src;
+            lightboxImg.alt = img.alt;
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+    });
+});
+
+// Close lightbox
+function closeLightbox() {
+    if (lightbox) {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+}
+
+if (lightboxClose) {
+    lightboxClose.addEventListener('click', closeLightbox);
+}
+
+if (lightbox) {
+    lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) {
+            closeLightbox();
+        }
+    });
+}
+
+// Close lightbox with Escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && lightbox && lightbox.classList.contains('active')) {
+        closeLightbox();
+    }
+});
+
+// Color card interaction
+document.querySelectorAll('.color-card').forEach(card => {
+    card.addEventListener('click', () => {
+        document.querySelectorAll('.color-card').forEach(c => c.classList.remove('active'));
+        card.classList.add('active');
+    });
+});
+
+// Animate portfolio sections on scroll
+const portfolioObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+        }
+    });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.portfolio-project, .gallery-item, .spec-item, .sketch-item').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(30px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    portfolioObserver.observe(el);
 });
 
 // Console message for developers
