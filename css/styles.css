@@ -605,6 +605,7 @@ section {
     width: 100%;
     height: auto;
     display: block;
+    transition: opacity 0.2s ease;
 }
 
 .specs-section {
@@ -1044,6 +1045,11 @@ section {
 
 .contact-card p {
     color: var(--text-light);
+}
+
+.contact-card p.highlight-text {
+    color: var(--primary-color);
+    font-weight: 600;
 }
 
 /* Footer */

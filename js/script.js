@@ -297,11 +297,25 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// Color card interaction
+// Color card interaction - switch preview image
 document.querySelectorAll('.color-card').forEach(card => {
     card.addEventListener('click', () => {
         document.querySelectorAll('.color-card').forEach(c => c.classList.remove('active'));
         card.classList.add('active');
+
+        // Update the preview image
+        const imagePath = card.getAttribute('data-image');
+        const colorName = card.querySelector('span').textContent;
+        const previewImg = document.getElementById('color-preview-img');
+
+        if (previewImg && imagePath) {
+            previewImg.style.opacity = '0';
+            setTimeout(() => {
+                previewImg.src = imagePath;
+                previewImg.alt = colorName;
+                previewImg.style.opacity = '1';
+            }, 200);
+        }
     });
 });
 
